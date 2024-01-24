@@ -11,6 +11,7 @@ public class Group{
     private static int countCourse3 = 0;
     private static int countCourse4 = 0;
     private String specialization;
+    private boolean elderAvailability; // наличие старосты в группе
     private ArrayList<Student> studentsGroup = new ArrayList<>();
     public Group(String groupName, int countStudents, String specialization) {
         this.groupName = groupName;
@@ -100,6 +101,20 @@ public class Group{
     // Показать/получить студента
     public Student getStudentsGroup(String fio) {
         return studentsGroup.get(getIndex(fio));
+    }
+    // Добавить старосту
+    public void addElder(int age, String fio, String groupName, Student.Sex sex) {
+            if (!elderAvailability) {
+                studentsGroup.add(new Elder(age, fio, groupName, sex));
+                elderAvailability = true;
+                System.out.println("В группу " + groupName + " добавлена староста " + fio);
+            } else {
+                System.out.println("Ошибка! В группе уже есть староста!");
+            }
+    }
+    // Показать/получить старосту
+    public Elder getElder(String fio) {
+        return (Elder) studentsGroup.get(getIndex(fio));
     }
     // Отчислить студента
     public void dismissStudent(String fio) {

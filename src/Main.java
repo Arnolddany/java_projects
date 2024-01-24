@@ -27,9 +27,11 @@ public class Main { // Определяет класс
         System.out.println(group41.getStudentsGroup("Валерия Попова"));
         System.out.println(group21.getStudentsGroup("Данила Шишков"));
 //
-//        Elder masha = new Elder(16, "Маша Смирнова", "П420", Student.Sex.female, Student.Status.studying);
-//        masha.setCourse(4);
-//        masha.messageDirector();
+        group41.addElder(16, "Маша Смирнова", "П420", Student.Sex.female);
+        group41.getElder("Маша Смирнова").messageDirector();
+
+        group41.getElder("Маша Смирнова").setCourse(4);
+        group41.getElder("Маша Смирнова").messageDirector();
 //
 //
         group41.addStudent(17, "Саша Петров", "П420", Student.Sex.male);

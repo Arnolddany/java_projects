@@ -6,6 +6,7 @@ public class Student {
     private String groupName; // Наименование группы студента
     private String fio;
     private int studentId; // номер студенческого билета
+
     public enum Status {
         studying, dismissed, academic
     }
