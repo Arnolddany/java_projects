@@ -124,10 +124,10 @@ public class Group{
     // Добавить студента
     public void addStudent(int age, String fio, String groupName,  double middleMark, Student.Sex sex) {
         studentsGroup.add(new Student(age, fio, groupName, middleMark, sex));
-        }
+    }
     // Показать/получить студента
     public Student getStudentsGroup(String fio) {
-        return studentsGroup.get(getIndex(fio));
+        return  studentsGroup.get(getIndex(fio));
     }
     // Добавить старосту
     public void addElder(int age, String fio, String groupName,  double middleMark, Student.Sex sex) {

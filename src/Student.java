@@ -100,11 +100,14 @@ public class Student {
 
     @Override
     public boolean equals(Object obj) {
+        boolean result = false;
         if (obj instanceof Student) {
             Student student = (Student) obj;
-            return this.age == student.age && Objects.equals(this.fio, student.fio) && Objects.equals(this.groupName, student.groupName);
+            if (this.age == student.age && Objects.equals(this.fio, student.fio) && Objects.equals(this.groupName, student.groupName)) {
+                result = true;
+            }
         }
-        return false;
+        return result;
     }
     public void setStatusStudying() {
         this.status = Status.studying;
