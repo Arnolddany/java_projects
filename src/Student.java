@@ -6,7 +6,7 @@ public class Student {
     private String groupName; // Наименование группы студента
     private String fio;
     private int studentId; // номер студенческого билета
-
+    private double middleMark; // средний бал
     public enum Status {
         studying, dismissed, academic
     }
@@ -17,10 +17,11 @@ public class Student {
     }
     private final Sex sex;
     private static int count = 0;
-    public Student(int age, String fio, String groupName, Sex sex){
+    public Student(int age, String fio, String groupName, double middleMark, Sex sex){
         this.age = age;
         this.fio = fio;
         this.groupName = groupName;
+        this.middleMark = middleMark;
         this.sex = sex;
         this.status = Status.studying;
         count++;
@@ -62,6 +63,15 @@ public class Student {
     }
     public Status getStatus() {
         return status;
+    }
+    public double getMiddleMark() {
+        return middleMark;
+    }
+    public void setMiddleMark(double middleMark) {
+        if (middleMark>=0.0 && middleMark<=5.0){
+            System.out.println("Ошибка! Средний бал не может быть меньше 0 и больше 5 баллов!");
+        }
+        this.middleMark = middleMark;
     }
     public void setCourse(int course){
         if (course>=1 && course<=4) {

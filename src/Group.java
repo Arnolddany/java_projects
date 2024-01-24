@@ -67,7 +67,7 @@ public class Group{
     public void getMaleStudentsFullAge() {
         System.out.println("Совершенноление студенты мужского пола в группе " + groupName + ":");
         for (Student student : studentsGroup) {
-            if (Student.Sex.male == student.getSex() && student.getAge()>=18) {
+            if (Student.Sex.male == student.getSex() && student.getAge() >= 18) {
                 System.out.println(student.getFio());
             }
         }
@@ -76,7 +76,34 @@ public class Group{
     public void getFemaleStudentsFullAge() {
         System.out.println("Совершенноление студенты женского пола в группе " + groupName + ":");
         for (Student student : studentsGroup) {
-            if (Student.Sex.female == student.getSex() && student.getAge()>=18) {
+            if (Student.Sex.female == student.getSex() && student.getAge() >= 18) {
+                System.out.println(student.getFio());
+            }
+        }
+    }
+    // Получить студентов со средним баллом отлично
+    public void getMarkExcellent() {
+        System.out.println("Студенты студенты со средним баллом 'Отлично' группы " + groupName + ":");
+        for (Student student : studentsGroup) {
+            if (student.getMiddleMark() == 5.0) {
+                System.out.println(student.getFio());
+            }
+        }
+    }
+    // Получить студентов со средним баллом хорошо
+    public void getMarkGood() {
+        System.out.println("Студенты студенты со средним баллом 'Хорошо' группы " + groupName + ":");
+        for (Student student : studentsGroup) {
+            if (student.getMiddleMark() >= 4.0 && student.getMiddleMark() < 5.0) {
+                System.out.println(student.getFio());
+            }
+        }
+    }
+    // Получить студентов со средним баллом удовлетворительно
+    public void getMarkSatisfactory() {
+        System.out.println("Студенты студенты со средним баллом 'Удовлетворительно' группы " + groupName + ":");
+        for (Student student : studentsGroup) {
+            if (student.getMiddleMark() >= 3.0 && student.getMiddleMark() < 4.0) {
                 System.out.println(student.getFio());
             }
         }
@@ -95,17 +122,17 @@ public class Group{
         return index;
     }
     // Добавить студента
-    public void addStudent(int age, String fio, String groupName, Student.Sex sex) {
-        studentsGroup.add(new Student(age, fio, groupName, sex));
+    public void addStudent(int age, String fio, String groupName,  double middleMark, Student.Sex sex) {
+        studentsGroup.add(new Student(age, fio, groupName, middleMark, sex));
         }
     // Показать/получить студента
     public Student getStudentsGroup(String fio) {
         return studentsGroup.get(getIndex(fio));
     }
     // Добавить старосту
-    public void addElder(int age, String fio, String groupName, Student.Sex sex) {
+    public void addElder(int age, String fio, String groupName,  double middleMark, Student.Sex sex) {
             if (!elderAvailability) {
-                studentsGroup.add(new Elder(age, fio, groupName, sex));
+                studentsGroup.add(new Elder(age, fio, groupName, middleMark, sex));
                 elderAvailability = true;
                 System.out.println("В группу " + groupName + " добавлена староста " + fio);
             } else {
