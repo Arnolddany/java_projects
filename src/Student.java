@@ -7,6 +7,12 @@ public class Student {
     private String fio;
     private int studentId; // номер студенческого билета
     private double middleMark; // средний бал
+
+    public Student(Student student, Sex sex) {
+
+        this.sex = sex;
+    }
+
     public enum Status {
         studying, dismissed, academic
     }
@@ -17,13 +23,15 @@ public class Student {
     }
     private final Sex sex;
     private static int count = 0;
-    public Student(int age, String fio, String groupName, double middleMark, Sex sex){
+    public Student(int age, String fio, String groupName, double middleMark, Sex sex, int course){
         this.age = age;
         this.fio = fio;
         this.groupName = groupName;
         this.middleMark = middleMark;
         this.sex = sex;
         this.status = Status.studying;
+        this.course = course;
+
         count++;
     }
 
@@ -100,14 +108,11 @@ public class Student {
 
     @Override
     public boolean equals(Object obj) {
-        boolean result = false;
-        if (obj instanceof Student) {
-            Student student = (Student) obj;
-            if (this.age == student.age && Objects.equals(this.fio, student.fio) && Objects.equals(this.groupName, student.groupName)) {
-                result = true;
-            }
+        if (this == obj) return true;
+        if (obj instanceof Student student2) {
+            return (this.age == student2.age) && Objects.equals(this.fio, student2.fio) && Objects.equals(this.groupName, student2.groupName);
         }
-        return result;
+        return false;
     }
     public void setStatusStudying() {
         this.status = Status.studying;
