@@ -1,28 +1,29 @@
-import com.sun.net.httpserver.Authenticator;
-
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Group{
-    private String groupName;
+public class Group {
+    private final String groupName;
     private int course;
-    private String specialization;
+    private final String specialization;
     private boolean elderAvailability; // наличие старосты в группе
-    private ArrayList<Student> studentsGroup = new ArrayList<>();
+    private final ArrayList<Student> studentsGroup = new ArrayList<>();
     public static ArrayList<Group> groups = new ArrayList<>();
+
     public Group(String groupName, String specialization, int course) {
         this.groupName = groupName;
         this.course = course;
         this.specialization = specialization;
-        groups.add(new Group(groupName, specialization, course));
     }
+
     @Override
     public String toString() {
         return super.toString() + " Наименование группы: " + groupName + " Курс: " + course + " Колличество студентов: " + studentsGroup.size() + " Специальность: " + specialization;
     }
+
     public static void printCountGroup() {
         System.out.println("Колличество групп: " + groups.size());
     }
+
     public static void printCountCourse() {
         int countCourse1 = 0;
         int countCourse2 = 0;
@@ -53,8 +54,8 @@ public class Group{
     public void printStudents() {
         System.out.println("Студенты группы " + groupName + ": ");
         for (Student student : studentsGroup) {
-            if (Objects.equals(groupName, student.getGroupName())) {
-                System.out.println(student.getFio());
+            if (Objects.equals(groupName, student.getGroupName()) && (student.getStatus() == Student.Status.studying)) {
+                System.out.println("Номер студенческого: " + student.getStudentId() + " " + student.getFio() + " Возраст: " + student.getAge());
             }
         }
     }
@@ -67,20 +68,22 @@ public class Group{
     public void printFemaleStudents() {
         System.out.println("Студенты женского пола в группе " + groupName + ":");
         for (Student student : studentsGroup) {
-            if (Student.Sex.female == student.getSex()){
+            if (Student.Sex.female == student.getSex()) {
                 System.out.println(student.getFio());
             }
         }
     }
+
     // Получить список студентов мужского пола
     public void printMaleStudents() {
         System.out.println("Студенты мужского пола в группе " + groupName + ":");
         for (Student student : studentsGroup) {
-            if (Student.Sex.male == student.getSex()){
+            if (Student.Sex.male == student.getSex()) {
                 System.out.println(student.getFio());
             }
         }
     }
+
     // Получить список совершеннолетних студентов мужского пола
     public void printMaleStudentsFullAge() {
         System.out.println("Совершенноление студенты мужского пола в группе " + groupName + ":");
@@ -90,6 +93,7 @@ public class Group{
             }
         }
     }
+
     // Получить список совершеннолетних студентов женского пола
     public void printFemaleStudentsFullAge() {
         System.out.println("Совершенноление студенты женского пола в группе " + groupName + ":");
@@ -99,6 +103,7 @@ public class Group{
             }
         }
     }
+
     // Получить студентов со средним баллом отлично
     public void printMarkExcellent() {
         System.out.println("Студенты студенты со средним баллом 'Отлично' группы " + groupName + ":");
@@ -108,6 +113,7 @@ public class Group{
             }
         }
     }
+
     // Получить студентов со средним баллом хорошо
     public void printMarkGood() {
         System.out.println("Студенты студенты со средним баллом 'Хорошо' группы " + groupName + ":");
@@ -117,6 +123,7 @@ public class Group{
             }
         }
     }
+
     // Получить студентов со средним баллом удовлетворительно
     public void printMarkSatisfactory() {
         System.out.println("Студенты студенты со средним баллом 'Удовлетворительно' группы " + groupName + ":");
@@ -126,88 +133,180 @@ public class Group{
             }
         }
     }
+
+    public void printAll(int ageFrom, int ageTo, double markMore, double markLess, Student.Sex sex, Student.Status status) {
+        System.out.println("Студенты студенты " + groupName + ":");
+        for (Student student : studentsGroup) {
+            if ((student.getAge() >= ageFrom) && (student.getAge() <= ageTo) && (student.getMiddleMark() >= markMore) && (student.getMiddleMark() <= markLess) && (student.getSex() == sex) && (student.getStatus() == status)) {
+                System.out.println("№" + student.getStudentId() + " " + student.getFio());
+            }
+        }
+    }
+
+    public void printStatusStudent(String fio, int studentId) {
+        Student student = getStudentGroup(fio, studentId);
+        String result = student.getFio() + " Номер студенческого билета: " + student.getStudentId();
+        switch (student.getStatus()) {
+            case studying -> result += " Статус: Обучается";
+            case academic -> result += " Статус: В академическом отпуске";
+            case dismissed -> result += " Статус: Отчислен";
+            default -> throw new IllegalArgumentException("Неизвестный статус!");
+        }
+        System.out.println(result);
+    }
+
     // Получить индекс элемента ArrayList
-    public int getIndex(String fio) {
+    public int getIndex(String fio, int studentId) {
         int index = 0;
         for (Student student : studentsGroup) {
-            if (Objects.equals(fio, student.getFio())) {
-                break;
-            }
-            else {
+            if (Objects.equals(fio, student.getFio()) && (studentId == student.getStudentId())) {
+                return index;
+            } else {
                 index++;
             }
         }
-        return index;
+        return -1;
     }
+
     // Добавить студента
-    public void addStudent(int age, String fio, String groupName,  double middleMark, Student.Sex sex, int course) {
+    public void addStudent(int age, String fio, String groupName, double middleMark, Student.Sex sex, int course, int studentId) {
         boolean successSearch = false;
+        Student tStudent = Student.createForEquals(age, fio, groupName, middleMark, sex, course, studentId);
         for (Student student : studentsGroup) {
-            if ((age == student.getAge()) && Objects.equals(fio, student.getFio()) && (middleMark == student.getMiddleMark()) && (sex == student.getSex())) {
+            if (Objects.equals(student, tStudent)) {
                 successSearch = true;
                 break;
             }
         }
         if (!successSearch) {
-            studentsGroup.add(new Student(age, fio, groupName, middleMark, sex, course));
-            System.out.println("Студент добавлен!");
+            Student student = Student.createStudent(age, fio, groupName, middleMark, sex, course, studentId);
+            if (student != null) {
+                studentsGroup.add(student);
+                System.out.println("Студент добавлен!");
+            } else {
+                System.out.println("Ошибка создания студента!");
+            }
         } else {
             System.out.println("Ошибка! Такой студент уже был добавлен!");
         }
     }
+
     // Показать/получить студента
-    public Student getStudentGroup(String fio) {
-        return  studentsGroup.get(getIndex(fio));
-    }
-    // Добавить старосту
-    public void addElder(int age, String fio, String groupName,  double middleMark, Student.Sex sex, int course) {
+    public Student getStudentGroup(String fio, int studentId) {
         boolean successSearch = false;
         int index = -1;
+        for (Student student : studentsGroup) {
+            if ((Objects.equals(fio, student.getFio())) && (studentId == student.getStudentId())) {
+                index = getIndex(fio, studentId);
+                successSearch = true;
+            }
+        }
+        if (successSearch && (index >= 0)) {
+            return studentsGroup.get(getIndex(fio, studentId));
+        } else {
+            System.out.println("Такого студента не существует в системе!");
+            return null;
+        }
+    }
+
+    // Добавить старосту
+    public void addElder(int age, String fio, String groupName, double middleMark, Student.Sex sex, int course, int studentId) {
+        boolean successSearch = false;
         if (!elderAvailability) {
-                for (Student student : studentsGroup) {
-                        if ((age == student.getAge()) && Objects.equals(fio, student.getFio()) && (middleMark == student.getMiddleMark()) && (sex == student.getSex())) {
-                            index = getIndex(fio);
-                            successSearch = true;
-                        }
+            Student tStudent = Student.createStudent(age, fio, groupName, middleMark, sex, course, studentId);
+            for (Student student : studentsGroup) {
+                if (Objects.equals(tStudent, student)) {
+                    successSearch = true;
+                    break;
                 }
+            }
+            if (successSearch) {
+                studentsGroup.set(getIndex(fio, studentId), new Elder(tStudent));
+                System.out.println("Студент " + fio + " назначен старостой в группу " + groupName);
+            } else {
+                studentsGroup.add(new Elder(age, fio, groupName, middleMark, sex, course, studentId));
+                System.out.println("В группу " + groupName + " добавлен староста " + fio);
+            }
+            elderAvailability = true;
         } else {
             System.out.println("Ошибка! В группе уже есть староста!");
         }
-        if ((successSearch) && (index >= 0)) {
-            Student student1 = studentsGroup.get(getIndex(fio));
-            studentsGroup.set(getIndex(fio), new Elder(student1.getAge(), student1.getFio(), student1.getGroupName(), student1.getMiddleMark(), student1.getSex(), student1.getCourse()));
-            elderAvailability = true;
-            System.out.println("Студент " + fio + " назначен старостой в группу " + groupName);
-        } else {
-            studentsGroup.add(new Elder(age, fio, groupName, middleMark, sex, course));
-            elderAvailability = true;
-            System.out.println("В группу " + groupName + " добавлена староста " + fio);
-        }
     }
+
     // Показать/получить старосту
-    public Elder getElder(String fio) {
-            return (Elder) studentsGroup.get(getIndex(fio));
+    public Elder getElder() {
+        Elder elder = null;
+        for (Student student : studentsGroup) {
+            if (student instanceof Elder studentElder) {
+                elder = studentElder;
+            }
+        }
+        return elder;
     }
 
     // Отчислить студента
-    public void dismissStudent(String fio) {
-        studentsGroup.get(getIndex(fio)).setStatusDismissed();
-        System.out.println("Студент " + studentsGroup.get(getIndex(fio)).getFio() + " отчислен!");
-
+    public void dismissStudent(String fio, int studentId) {
+        boolean successSearch = false;
+        int index = -1;
+        boolean thisElder = false;
+        for (Student student : studentsGroup) {
+            if ((Objects.equals(fio, student.getFio())) && studentId == student.getStudentId()) {
+                index = getIndex(fio, studentId);
+                successSearch = true;
+                if (student instanceof Elder) {
+                    thisElder = true;
+                }
+            }
+        }
+        if (successSearch && (index >= 0)) {
+            studentsGroup.get(getIndex(fio, studentId)).setStatusDismissed();
+            System.out.println("Студент " + studentsGroup.get(getIndex(fio, studentId)).getFio() + " отчислен!");
+            if (thisElder) {
+                elderAvailability = false;
+            }
+        } else {
+            System.out.println("Такого студента не существует в системе!");
+        }
     }
+
     // Отправить студента в академический отпуск
-    public void academicStudent(String fio) {
-        studentsGroup.get(getIndex(fio)).setStatusAcademic();
-        System.out.println("Студент " + studentsGroup.get(getIndex(fio)).getFio() + " отправлен в академический отпуск!");
+    public void academicStudent(String fio, int studentId) {
+        boolean successSearch = false;
+        int index = -1;
+        for (Student student : studentsGroup) {
+            if ((Objects.equals(fio, student.getFio())) && (studentId == student.getStudentId())) {
+                index = getIndex(fio, studentId);
+                successSearch = true;
+            }
+        }
+        if (successSearch && (index >= 0)) {
+            studentsGroup.get(getIndex(fio, studentId)).setStatusAcademic();
+            System.out.println("Студент " + studentsGroup.get(getIndex(fio, studentId)).getFio() + " отправлен в академический отпуск!");
+        } else {
+            System.out.println("Такого студента не существует в системе!");
+        }
+    }
 
-    }
     // Восстановить студента
-    public void studyingStudent(String fio) {
-        studentsGroup.get(getIndex(fio)).setStatusStudying();
-        System.out.println("Студент " + studentsGroup.get(getIndex(fio)).getFio() + " восстановлен в учебный график!");
+    public boolean studyingStudent(String fio, int studentId) {
+        boolean successSearch = false;
+        for (Student student : studentsGroup) {
+            if ((Objects.equals(fio, student.getFio())) && (studentId == student.getStudentId())) {
+                successSearch = true;
+                break;
+            }
+        }
+        if (successSearch) {
+            studentsGroup.get(getIndex(fio, studentId)).setStatusStudying();
+            System.out.println("Студент " + studentsGroup.get(getIndex(fio, studentId)).getFio() + " восстановлен в учебный график!");
+            return successSearch;
+        } else {
+            return successSearch;
+        }
     }
+
     // Получить список отчисленных студентов
-    public void getDismissedStudent() {
+    public void printDismissedStudent() {
         System.out.println("Отчисленные студенты группы " + groupName + ":");
         for (Student student : studentsGroup) {
             if (Student.Status.dismissed == student.getStatus()) {
@@ -215,17 +314,9 @@ public class Group{
             }
         }
     }
-    // Получить список обучающихся студентов
-    public void getStudyingStudent() {
-        System.out.println("Обучающиеся студенты группы " + groupName + ":");
-        for (Student student : studentsGroup) {
-            if (Student.Status.studying == student.getStatus()) {
-                System.out.println(student.getFio());
-            }
-        }
-    }
+
     // Получить список студентов находящихся в академическом отпуске
-    public void getAcademicStudent() {
+    public void printAcademicStudent() {
         System.out.println("Студенты группы " + groupName + " находящиеся в академическом отпуске:");
         for (Student student : studentsGroup) {
             if (Student.Status.academic == student.getStatus()) {
@@ -233,24 +324,24 @@ public class Group{
             }
         }
     }
+
     public int getCourse() {
         return course;
     }
+
     public String getSpecialization() {
         return specialization;
     }
+
     public String getGroupName() {
         return groupName;
     }
+
     public void setCourse(int course) {
         if ((course >= 1) && (course <= 4)) {
             this.course = course;
-        }
-        else {
+        } else {
             System.out.println("Ошибка курс должен быть 0т 1 до 4!");
         }
-    }
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
     }
 }
