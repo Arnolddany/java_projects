@@ -12,14 +12,6 @@ public class Group {
     private final ArrayList<Student> studentsGroup = new ArrayList<>();
     public static ArrayList<Group> groups = new ArrayList<>();
 
-    static class PersonComparator implements java.util.Comparator<Student> {
-
-        @Override
-        public int compare(Student student1, Student student2) {
-            return (int) (student1.getMiddleMark() - student2.getMiddleMark());
-        }
-    }
-
     public Group(String groupName, String specialization, int course) {
         this.groupName = groupName;
         this.course = course;
