@@ -10,10 +10,16 @@ public class Student {
     private double middleMark; // средний бал
     private static ArrayList<Integer> idsStudent = new ArrayList<>();
 
+    public enum Language {
+        german, japanese, french, italian, english, korean, chinese
+    }
+
     public enum Status {
         studying, dismissed, academic
     }
 
+
+    private Language studiedLanguage;
     private Status status; // учебный статус
 
     public enum Sex {
@@ -23,7 +29,7 @@ public class Student {
     private Sex sex;
     private static int count = 0;
 
-    protected Student(int age, String fio, String groupName, double middleMark, Sex sex, int course, int studentId) {
+    protected Student(int age, String fio, String groupName, double middleMark, Sex sex, int course, int studentId, Language studiedLanguage) {
         this.age = age;
         this.fio = fio;
         this.groupName = groupName;
@@ -33,33 +39,64 @@ public class Student {
         this.course = course;
         this.studentId = studentId;
         idsStudent.add(studentId);
+        this.studiedLanguage = studiedLanguage;
+        count++;
+    }
+
+    protected Student(int age, String fio, String groupName, double middleMark, Sex sex, int course, Language studiedLanguage) {
+        this.age = age;
+        this.fio = fio;
+        this.groupName = groupName;
+        this.middleMark = middleMark;
+        this.sex = sex;
+        this.status = Status.studying;
+        this.course = course;
+        int max = getMaxStudentId(idsStudent);
+        this.studentId = ++max;
+        idsStudent.add(studentId);
+        this.studiedLanguage = studiedLanguage;
         count++;
     }
 
     private Student() {
     }
 
-    public static Student createStudent(int age, String fio, String groupName, double middleMark, Sex sex, int course, int studentId) {
+    public static Student createStudent(int age, String fio, String groupName, double middleMark, Sex sex, int course, int studentId, Language studiedLanguage) {
         Student result = null;
-
         boolean success = false;
-        for (Integer id : idsStudent) {
-            if (id == studentId) {
-                success = true;
-                break;
+        if (studentId == 0) {
+            result = new Student(age, fio, groupName, middleMark, sex, course, studiedLanguage);
+        } else {
+            for (Integer id : idsStudent) {
+                if (id == studentId) {
+                    success = true;
+                    break;
+                }
+            }
+            if (!success) {
+                result = new Student(age, fio, groupName, middleMark, sex, course, studentId, studiedLanguage);
+            } else {
+                String err = String.format("Ошибка! Номер студенческого %d уже используется!", studentId);
+                System.out.println(err);
             }
         }
-        if (!success) {
-            result = new Student(age, fio, groupName, middleMark, sex, course, studentId);
-        } else {
-            String err = String.format("Ошибка! Номер студенческого %d уже используется!", studentId);
-            System.out.println(err);
-        }
+
 
         return result;
     }
 
-    public static Student createForEquals(int age, String fio, String groupName, double middleMark, Sex sex, int course, int studentId) {
+    public int getMaxStudentId(ArrayList<Integer> idsStudent) {
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < idsStudent.size(); i++) {
+            if (idsStudent.get(i) > max) {
+                max = idsStudent.get(i);
+            }
+
+        }
+        return max;
+    }
+
+    public static Student createForEquals(int age, String fio, String groupName, double middleMark, Sex sex, int course, int studentId, Language studiedLanguage) {
         Student student = new Student();
         student.age = age;
         student.fio = fio;
@@ -68,6 +105,7 @@ public class Student {
         student.sex = sex;
         student.course = course;
         student.studentId = studentId;
+        student.studiedLanguage = studiedLanguage;
 
         return student;
     }
@@ -123,6 +161,10 @@ public class Student {
 
     public double getMiddleMark() {
         return middleMark;
+    }
+
+    public Language getStudiedLanguage() {
+        return studiedLanguage;
     }
 
     public void setMiddleMark(double middleMark) {

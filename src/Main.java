@@ -12,7 +12,7 @@ public class Main { // Определяет класс
         Group.printCountCourse();
 
 
-        group41.addStudent(19, "Валерия Попова", "П420", 4.6, Student.Sex.female, group41.getCourse(), 10);
+        group41.addStudent(19, "Валерия Попова", "П420", 4.6, Student.Sex.female, group41.getCourse(), 10, Student.Language.english);
 
 //        group21.addStudent(17, "Данила Шишков","Р218", 3.8, Student.Sex.male, group21.getCourse());
 //        group21.getStudentsGroup("Данила Шишков").setStudentId(183);
@@ -24,13 +24,13 @@ public class Main { // Определяет класс
         System.out.println(group41.getStudentGroup("Валерия Попова", 10));
         //     System.out.println(group21.getStudentsGroup("Данила Шишков"));
 
-        group41.addElder(16, "Маша Смирнова", "П420", 5.0, Student.Sex.female, group41.getCourse(), 11);
+        group41.addElder(16, "Маша Смирнова", "П420", 5.0, Student.Sex.female, group41.getCourse(), 11, Student.Language.english);
         group41.getElder().setCourse(4);
         group41.getElder().messageDirector();
 
 
-        group41.addStudent(17, "Саша Петров", "П420", 3.2, Student.Sex.male, group41.getCourse(), 12);
-        group41.addStudent(17, "Николай Смирнов", "П420", 4.5, Student.Sex.male, group41.getCourse(), 13);
+        group41.addStudent(17, "Саша Петров", "П420", 3.2, Student.Sex.male, group41.getCourse(), 12, Student.Language.english);
+        group41.addStudent(17, "Николай Смирнов", "П420", 4.5, Student.Sex.male, group41.getCourse(), 13, Student.Language.english);
 
         group41.printStudents();
         System.out.println();
@@ -42,18 +42,11 @@ public class Main { // Определяет класс
         group41.academicStudent("Николай Смирнов", 10);
         group41.printAcademicStudent();
         System.out.println();
-        group41.printFemaleStudentsFullAge();
-        System.out.println();
-        group41.printMarkExcellent();
-        System.out.println();
-        group41.printMarkGood();
-        System.out.println();
-        group41.printMarkSatisfactory();
 
         //1
-        group21.addStudent(19, "Valeria", "Р218", 4.6, Student.Sex.female, group21.getCourse(), 14);
-        group21.addStudent(19, "Polina", "Р218", 5.0, Student.Sex.female, group21.getCourse(), 15);
-        group21.addElder(19, "Valeria", "Р218", 4.6, Student.Sex.female, group21.getCourse(), 16);
+        group21.addStudent(19, "Valeria", "Р218", 4.6, Student.Sex.female, group21.getCourse(), 14, Student.Language.english);
+        group21.addStudent(19, "Polina", "Р218", 5.0, Student.Sex.female, group21.getCourse(), 15, Student.Language.english);
+        group21.addElder(19, "Valeria", "Р218", 4.6, Student.Sex.female, group21.getCourse(), 16, Student.Language.english);
         System.out.println(group21.getStudentGroup("Valeria", 14));
         // group21.getElder("Valeria");
         group21.printStudents();
